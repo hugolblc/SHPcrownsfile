@@ -1,0 +1,19 @@
+---
+title: "update_crowns_file"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{update_crowns_file}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(SHPcrownsfile)
+```
