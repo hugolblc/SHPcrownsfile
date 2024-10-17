@@ -16,4 +16,13 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(SHPcrownsfile)
+library(sf)
+
+
+old_shp <- read_sf(system.file("gpkg/old_version.gpkg", package = 'SHPcrownsfile'))
+new_shp <- read_sf(system.file("gpkg/gpkg_from_tablet.gpkg", package = 'SHPcrownsfile'))
+
+new_shp_corrected <- get_correct_id(new_shp = new_shp, 
+               old_shp = old_shp, 
+               crs = 'epsg:32633')
 ```

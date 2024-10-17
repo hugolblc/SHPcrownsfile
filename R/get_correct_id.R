@@ -13,6 +13,7 @@
 #' @importFrom sf st_geometry
 #' @importFrom sf st_centroid
 #' @importFrom sf st_distance
+#' @import dplyr
 
 get_correct_id <- function(new_shp, old_shp, crs){
 
@@ -25,8 +26,8 @@ get_correct_id <- function(new_shp, old_shp, crs){
    sf::st_geometry(new_shp) <- "geometry"
 
    # Create new variables
-   new_shp$idmodif <- NA
-   new_shp$samegeom <- NA
+   new_shp$idmodif_idn <- NA
+   new_shp$idmodif_geom <- NA
 
 
    # Get corrected id from the id_n
@@ -38,7 +39,7 @@ get_correct_id <- function(new_shp, old_shp, crs){
 
          if(id != new_shp$id[i]){
             new_shp$id[i] = id
-            new_shp$idmodif[i] = 'OUI'
+            new_shp$idmodif_idn[i] = 'OUI'
          }
 
       }
@@ -57,14 +58,15 @@ get_correct_id <- function(new_shp, old_shp, crs){
 
          if(!new_shp$id[i] == same_geom){
             new_shp$id[i] = same_geom
-            new_shp$idmodif[i] = 'OUI'
+            new_shp$idmodif_geom[i] = 'OUI'
          }
-
-         new_shp$samegeom[i] = 'OUI'
 
       }
 
    }
+
+   correct_id_by_idn <- new_shp %>% filter(idmodif_idn == 'OUI')
+   correct_id_by_geom <- new_shp %>% filter(idmodif_geom == 'OUI')
 
    return(new_shp)
 
