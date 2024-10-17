@@ -50,15 +50,15 @@ new_shp_corrected$correct_id_by_geom
 
 ```{r}
 gil <- read_xlsx(system.file("xlsx/extract_bouamir_observatory_10_2024.xlsx", package = 'SHPcrownsfile'))
-
+sf <- new_shp_corrected$corrected_shp
 # Check les ids manquants
-new_shp_corrected$id[!new_shp_corrected$id %in% gil$id]
-gil$id[!gil$id %in% new_shp_corrected$id] # ajouter l'id 984 depuis dbx
+sf$id[!sf$id %in% gil$id]
+gil$id[!gil$id %in% sf$id] # ajouter l'id 984 depuis dbx
 
 
-sf <- new_shp_corrected %>% filter(id %in% gil$id)
+sf <- sf %>% filter(id %in% gil$id)
 
-sf <- new_shp_corrected %>% arrange(id)
+sf <- sf %>% arrange(id)
 gil <- gil %>% arrange(id)
 gilç_984 <- gil %>% filter(id == 984)
 gil <- gil %>% filter(id != 984)
@@ -73,19 +73,20 @@ sf <- sf %>% mutate(id_n = gil$id_n,
               wood_density_mean = gil$wood_density_mean)
 
 
-sf <- sf %>% select(-c(idmodif,samegeom))
+sf <- sf %>% select(-c(idmodif_idn,idmodif_geom))
+
+
 # ajouter l'id 984 depuis dbx
-
-old_sf <- read_sf(file.choose())
-old_sf <- old_sf %>% filter(id == 984)
-old_sf <- old_sf %>% select(-area)
-old_sf <- old_sf %>% select(-c(taxa_level_succession_guild,stem_diameter_observations))
-
-names(old_sf)[27]
-names(old_sf) == names(sf)
-old_sf <- sf::st_transform(old_sf, st_crs(sf))
-new <- rbind(sf,old_sf)
-plot(new$geom)
+# old_sf <- read_sf(file.choose())
+# old_sf <- old_sf %>% filter(id == 984)
+# old_sf <- old_sf %>% select(-area)
+# old_sf <- old_sf %>% select(-c(taxa_level_succession_guild,stem_diameter_observations))
+# 
+# names(old_sf)[27]
+# names(old_sf) == names(sf)
+# old_sf <- sf::st_transform(old_sf, st_crs(sf))
+# new <- rbind(sf,old_sf)
+# plot(new$geom)
 # st_write(new, 'E:/updated_crowns_bouamir.gpkg')
 ```
 
