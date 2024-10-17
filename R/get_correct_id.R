@@ -65,9 +65,13 @@ get_correct_id <- function(new_shp, old_shp, crs){
 
    }
 
-   correct_id_by_idn <- new_shp %>% filter(idmodif_idn == 'OUI')
-   correct_id_by_geom <- new_shp %>% filter(idmodif_geom == 'OUI')
+   correct_id_by_idn <- new_shp %>% filter(idmodif_idn == 'OUI') %>% .[['id']]
+   correct_id_by_geom <- new_shp %>% filter(idmodif_geom == 'OUI') %>% .[['id']]
 
-   return(new_shp)
+   mylist <- list(corrected_shp = new_shp,
+                  correct_id_by_idn = correct_id_by_idn,
+                  correct_id_by_geom = correct_id_by_geom)
+
+   return(mylist)
 
 }
