@@ -33,6 +33,7 @@ comparison_ui <- function(id) {
 #' @param new_shp sf object. New shapefile to compare.
 #'
 #' @return A list containing the comparison results.
+#' @import sf shiny DT dplyr
 #' @export
 comparison_server <- function(input, output, session, dbx_shp, new_shp) {
 
@@ -52,7 +53,7 @@ comparison_server <- function(input, output, session, dbx_shp, new_shp) {
    output$comp <- renderDT({
 
       datatable(
-         comparison$full_comp %>% select(id, id_comp, idtax_f_dbx, idtax_f_new, idtax_f_comp, geom_comp),
+         comparison$full_comp %>% dplyr::select(id, id_comp, idtax_f_dbx, idtax_f_new, idtax_f_comp, geom_comp),
          filter = 'top',
          style = "bootstrap4",
          options = list( pageLength = 10, autoWidth = TRUE,

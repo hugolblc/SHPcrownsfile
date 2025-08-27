@@ -8,6 +8,7 @@
 #' @return A Shiny UI element (tagList) for file input, selectInput, and checkbox.
 #'
 #' @export
+#' @import shiny
 
 upload_updated_data_ui <- function(id) {
 
@@ -64,6 +65,8 @@ upload_updated_data_ui <- function(id) {
 #' @return A reactive expression returning the updated `sf` object if the checkbox is checked, or NULL otherwise.
 #'
 #' @export
+#' @import shiny sf dplyr
+
 upload_updated_data_server <- function(input, output, session) {
 
    data <- reactive({

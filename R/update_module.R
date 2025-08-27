@@ -10,7 +10,7 @@
 #'
 #' @export
 #'
-#' @import sf xlsx dplyr
+#' @import sf dplyr
 
 update_ui <- function(id) {
 
@@ -58,6 +58,7 @@ update_ui <- function(id) {
 #' @return None. Provides reactive download via Shiny.
 #'
 #' @export
+#' @import shiny sf readxl dplyr openxlsx
 update_server <-
 
    function(input, output, session, site, new_shp, comparison) {

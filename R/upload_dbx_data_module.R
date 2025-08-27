@@ -4,6 +4,7 @@
 #'
 #' @return Shiny UI elements for uploading a shapefile and selecting a column
 #' @export
+#' @import shiny
 
 upload_dbx_data_ui <- function(id) {
 
@@ -55,6 +56,7 @@ upload_dbx_data_ui <- function(id) {
 #'
 #' @return A reactive list containing the shapefile (`shp`) and selected site (`site`) when checkbox is checked
 #' @export
+#' @import shiny sf dplyr
 
 upload_dbx_data_server <- function(input, output, session) {
 

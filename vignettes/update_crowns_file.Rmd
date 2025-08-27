@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 library(SHPcrownsfile)
 library(sf)
-library(tidyverse)
+library(dplyr)
 library(readxl)
 library(mapview)
 ```

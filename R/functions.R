@@ -30,27 +30,27 @@ compare_shp_files <- function(dbx_shp, new_shp){
    dbx_shp <- dbx_shp %>% st_transform(st_crs(new_shp))
 
 
-   dbx_shp <- dbx_shp %>% mutate(centroid = st_centroid(geometry))
-   new_shp <- new_shp %>% mutate(centroid = st_centroid(geometry))
+   dbx_shp <- dbx_shp %>% dplyr::mutate(centroid = st_centroid(geometry))
+   new_shp <- new_shp %>% dplyr::mutate(centroid = st_centroid(geometry))
 
 
-   full <- full_join(as_tibble(dbx_shp),
+   full <- dplyr::full_join(as_tibble(dbx_shp),
                      as_tibble(new_shp),
                      by = 'id',
                      suffix = c("_dbx", "_new")) %>%
 
-      mutate(id_dbx = if_else(id %in% unique(dbx_shp$id), TRUE, FALSE),
+      dplyr::mutate(id_dbx = if_else(id %in% unique(dbx_shp$id), TRUE, FALSE),
              id_new = if_else(id %in% unique(new_shp$id), TRUE, FALSE),
 
              id_comp =
-                case_when(
+                dplyr::case_when(
                    id_dbx == FALSE & id_new == TRUE ~ 'created',
                    id_dbx == TRUE & id_new == FALSE ~ 'removed',
                    id_dbx == TRUE & id_new == TRUE ~ 'already present'
                    ),
 
              idtax_f_comp =
-                case_when(
+                dplyr::case_when(
                    id_comp == 'removed' ~ 'id removed',
                    id_comp == 'created' & idtax_f_new != 0 ~ 'new id identified',
                    id_comp == 'created' & idtax_f_new == 0 ~ 'new id indet',
@@ -61,7 +61,7 @@ compare_shp_files <- function(dbx_shp, new_shp){
                    id_comp == 'already present' & idtax_f_new != idtax_f_dbx ~ 're-identified'),
 
                    geom_comp =
-                      case_when(
+                dplyr::case_when(
                          id_comp == 'removed' ~ 'id removed',
                          id_comp == 'created' & st_is_empty(geometry_new) == FALSE ~ 'polygon created',
                          id_comp == 'created' & st_is_empty(geometry_new) == FALSE ~ 'new id emptypolygon',
@@ -72,7 +72,7 @@ compare_shp_files <- function(dbx_shp, new_shp){
                          (!is.na(as.numeric(st_distance(centroid_new, centroid_dbx, by_element = TRUE)) > 0)) & as.numeric(st_distance(centroid_new, centroid_dbx, by_element = TRUE)) > 0  ~ 'polygon modified'
                          )) %>%
 
-      select(id, id_dbx, id_new, id_comp,
+      dplyr::select(id, id_dbx, id_new, id_comp,
              idtax_f_dbx, idtax_f_new, idtax_f_comp,
              geometry_dbx, geometry_new, geom_comp)
 

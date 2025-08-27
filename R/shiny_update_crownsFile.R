@@ -3,6 +3,7 @@
 #' Cette fonction lance l'application Shiny.
 #'
 #' @export
+#' @import shiny
 shiny_update_crownsFile <- function() {
    appDir <- system.file("shiny_app", package = "SHPcrownsfile")
    if (appDir == "") {

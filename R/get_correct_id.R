@@ -9,11 +9,7 @@
 #'
 #' @export
 #'
-#' @importFrom sf st_transform
-#' @importFrom sf st_geometry
-#' @importFrom sf st_centroid
-#' @importFrom sf st_distance
-#' @import dplyr
+#' @import dplyr sf
 
 get_correct_id <- function(new_shp, old_shp, crs){
 
@@ -27,7 +23,7 @@ get_correct_id <- function(new_shp, old_shp, crs){
 
    # Remove empty polygons
    new_shp <- new_shp %>%
-      filter(!st_is_empty(geometry))
+      dplyr::filter(!st_is_empty(geometry))
 
    # Create new variables
    new_shp$idmodif_idn <- NA

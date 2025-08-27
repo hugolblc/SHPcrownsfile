@@ -17,7 +17,12 @@ VignetteBuilder: knitr
 RoxygenNote: 7.3.2
 Imports: 
     dplyr,
-    sf
+    DT,
+    leaflet,
+    openxlsx,
+    readxl,
+    sf,
+    shiny
 Config/testthat/edition: 3
 URL: https://github.com/hugolblc/SHPcrownsfile
 BugReports: https://github.com/hugolblc/SHPcrownsfile/issues

@@ -7,6 +7,7 @@
 #'
 #' @return A Shiny UI object (tabPanel with leafletOutput).
 #' @export
+#' @import shiny leaflet
 plot_ui <- function(id) {
 
    ns <- NS(id)
@@ -32,6 +33,8 @@ plot_ui <- function(id) {
 #'
 #' @return None. Creates a Leaflet map output in the module's UI.
 #' @export
+#' @import shiny leaflet sf dplyr
+
 plot_server <- function(input, output, session, dbx_shp, new_shp, comparison) {
 
    st_geometry(dbx_shp) <- "geometry"
