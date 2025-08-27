@@ -20,9 +20,8 @@ library(SHPcrownsfile)
 library(sf)
 library(tidyverse)
 library(readxl)
+library(mapview)
 ```
-
-
 
 ```{r, message=FALSE, warning=FALSE, paged.print=FALSE, results = 'hide'}
 old_shp <- read_sf(system.file("gpkg/old_version.gpkg", package = 'SHPcrownsfile'))
@@ -34,19 +33,68 @@ new_shp_corrected <- get_correct_id(new_shp = new_shp,
                crs = 'epsg:32633')
 ```
 
-# The new sf object with the id corrected
-```{r, message=FALSE, warning=FALSE, paged.print=FALSE}
-head(new_shp_corrected$corrected_shp) 
-```
-# The id that have been corrected using the id_n
-```{r, message=FALSE, warning=FALSE, paged.print=FALSE}
-new_shp_corrected$correct_id_by_idn
-```
-# The id that have been corrected using the centroid
-```{r, message=FALSE, warning=FALSE, paged.print=FALSE}
-new_shp_corrected$correct_id_by_geom
+STEP 1 : Regarder les polygones dont la geometrie a été modifiée et l'id a été 
+retrouvé dans l'ancien fichier à partir de id_n. Typiquement un arbre mal dessiné
+
+--- Est ce que l'id a bien suivi ? 
+--- Est ce qu'on changer l'id car on considère qu'il ne s'agit plus du même arbre ?
+(Typiquement quand la couronne a été délimité sur le mauvais arbre et qu'à partir 
+de l'identification Alex a corriger la geometrie sur la mission m+1 pour remettre sur 
+le bon arbre. Dans ce cas, l'id doit changer et la geometrie de l'autre arbre doit 
+rester dans le nouveau fichier, si elle était bien délimité (et surtout si des traits 
+ont été collectés dessus), veiller à changer l'identification)
+
+```{r, message=FALSE, warning=FALSE, paged.print=FALSE, results = 'hide'}
+modif_geom_new  = new_shp_corrected$corrected_shp %>% filter(
+   id %in% new_shp_corrected$no_match_found_by_geom,
+   idmodif_idn == 'OUI')
+
+modif_geom_old = old_shp[old_shp$id %in% modif_geom_new$id,]
+
+mapview(old_shp,alpha.regions = 0,lwd = 0.5,color = 'black',label = modif_geom_old$id) +
+   mapview(modif_geom_old,col.regions = "blue",alpha.regions = 0.5,lwd = 2,color ='blue',label = modif_geom_old$id) +
+   mapview(modif_geom_new,col.regions = "red",alpha.regions = 0.2,lwd = 2,color = 'red',label = modif_geom_new$id)
 ```
 
+STEP 2 : Regarder les nouvelles couronnes
+
+Ici il faut simplment s'assurer que les nouvelles couronnes ne correspondent pas 
+aux anciennes et que Qfield a bien généré des ids non existants
+
+
+```{r, message=FALSE, warning=FALSE, paged.print=FALSE, results = 'hide'}
+new_crowns  = new_shp_corrected$corrected_shp %>% filter(
+    id %in% new_shp_corrected$no_match_found_by_geom,
+    is.na(idmodif_idn))
+
+# Check, si Qfield n'a pas généré des ids déjà existants (normalement non)
+new_crowns$id[new_crowns$id %in% old_shp$id]
+
+# Check, si les couronnes rouge ne correspondent à aucune couronne noire, si c'est le 
+# il faudra lui reatribuer le bon id
+mapview(old_shp,alpha.regions = 0,lwd = 0.5,color = 'black',label = modif_geom_old$id) +
+   mapview(new_crowns,col.regions = "red",alpha.regions = 0.2,lwd = 2,color = 'red',label = modif_geom_new$id)
+```
+
+
+
+STEP 3 : Regarder si des couronnes ont été supprimées
+
+Si oui, suppression volontaire et justifiée ? ne rien faire
+Si oui, suppression non justifiée ? Remettre la couronne dans le nouveau fichier
+Si non, RAS
+
+```{r, message=FALSE, warning=FALSE, paged.print=FALSE, results = 'hide'}
+old_shp$id[!old_shp$id %in% new_shp_corrected$corrected_shp$id] 
+```
+
+
+STEP 3 : Regarder si il n'y a pas d'id dupliqué
+
+```{r, message=FALSE, warning=FALSE, paged.print=FALSE, results = 'hide'}
+new_shp_corrected$corrected_shp$id[duplicated(new_shp_corrected$corrected_shp$id)]
+```
+MANIP DE GILLES, ET ON CONTINUE...
 
 ```{r}
 gil <- read_xlsx(system.file("xlsx/extract_bouamir_observatory_10_2024.xlsx", package = 'SHPcrownsfile'))
@@ -60,7 +108,7 @@ sf <- sf %>% filter(id %in% gil$id)
 
 sf <- sf %>% arrange(id)
 gil <- gil %>% arrange(id)
-gilç_984 <- gil %>% filter(id == 984)
+gil_984 <- gil %>% filter(id == 984)
 gil <- gil %>% filter(id != 984)
 unique(sf$id == gil$id)
 
