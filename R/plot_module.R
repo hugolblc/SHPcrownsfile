@@ -1,29 +1,12 @@
-####
-#### MODULE DESCRIPTION
-####
-
-# This module plots the result of the comparison as an interactive map within the panel 'Map'
-
-####
-#### MODULE INPUTS
-####
-
-# dbx_shp from the module upload_dbx_data_server
-# new_shp from the module upload_updated_data_server
-
-####
-#### MODULE OUTPUS
-####
-
-# This module shows the results of the comparison within the 'Comparison panel'
-# and retrun the result of the compare_shp_files function
-
-####
-#### Packages and functions
-####
-
-# This module requires the package sf, leaflet and dplyr
-
+#' UI module for interactive map of polygons
+#'
+#' @description
+#' This function creates the UI part of a Shiny module displaying polygons on a Leaflet map.
+#'
+#' @param id Character. Shiny module id.
+#'
+#' @return A Shiny UI object (tabPanel with leafletOutput).
+#' @export
 plot_ui <- function(id) {
 
    ns <- NS(id)
@@ -35,6 +18,20 @@ plot_ui <- function(id) {
 
 }
 
+
+#' Server module for interactive map of polygons
+#'
+#' @description
+#' This function handles the server logic for the Shiny module displaying polygons on a Leaflet map.
+#' It compares two spatial datasets and highlights new, removed, or modified polygons.
+#'
+#' @param input,output,session Standard Shiny server arguments.
+#' @param dbx_shp sf object. Original polygons (e.g., from Dropbox).
+#' @param new_shp sf object. New polygons to compare.
+#' @param comparison data.frame. Comparison table with columns 'id_comp' and 'geom_comp' indicating new/removed/modified polygons.
+#'
+#' @return None. Creates a Leaflet map output in the module's UI.
+#' @export
 plot_server <- function(input, output, session, dbx_shp, new_shp, comparison) {
 
    st_geometry(dbx_shp) <- "geometry"

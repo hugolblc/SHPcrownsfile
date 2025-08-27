@@ -1,41 +1,9 @@
-####
-#### MODULE DESCRIPTION
-####
-
-# This module requires the user to choose the site of the data 'Mbalmayo' or
-# 'Bouamir'and return a list with $shp : the dropbox version of the crowns vector data as sf object
-#                                 $site : the name of the site as character objet
-
-####
-#### MODULE INPUTS
-####
-
-# First the module requires the user to select the site. From the site name, the
-# last dropbox version of tyhe crown will be load
-
-# Then the user will have to select the idtax_f dbx file (the column corresponding to istax_f)
-
-# And check the 'Dbx done' button, the names 'idtax_f' and 'geometry' will be given
-# to the corresponding column
-
-####
-#### MODULE OUTPUS
-####
-
-# return a list with $shp : the dropbox version of the crowns vector data as sf object with renamed columns
-#                    $site : the name of the site as character objet
-
-####
-#### Packages and functions
-####
-
-# This module requires the package sf and dplyr
-
-# and use the function
-   # dplyr::rename
-   # sf::read_sf
-   # sf::st_geometry
-
+#' UI module for uploading a Dbx shapefile
+#'
+#' @param id Shiny module id
+#'
+#' @return Shiny UI elements for uploading a shapefile and selecting a column
+#' @export
 
 upload_dbx_data_ui <- function(id) {
 
@@ -79,6 +47,14 @@ upload_dbx_data_ui <- function(id) {
    )
 }
 
+#' Server module for uploading a Dbx shapefile
+#'
+#' @param input Shiny input
+#' @param output Shiny output
+#' @param session Shiny session
+#'
+#' @return A reactive list containing the shapefile (`shp`) and selected site (`site`) when checkbox is checked
+#' @export
 
 upload_dbx_data_server <- function(input, output, session) {
 

@@ -1,35 +1,16 @@
-####
-#### MODULE DESCRIPTION
-####
-
-# This module allow the user to update the data on dropbox and/or to download
-# the results of the comparison
-
-####
-#### MODULE INPUTS
-####
-
-# dbx_shp from the module upload_dbx_data_server
-# new_shp from the module upload_updated_data_server
-# comparison$full_comp from the module comparison_server
-
-# The date of the update is the current date by default, but the user can change it
-
-####
-#### MODULE OUTPUS
-####
-
-# The 'Update files on Dropbox' button will move files from the main folder to the archived folders
-# and save the updated files (.gpkg for the crowns vector data and .xlsx for the comparison file)
-
-# The "Download the comparison data" button will download the current comparion as .xlsx file
-
-
-####
-#### Packages and functions
-####
-
-# This module requires the package sf, xlsx and dplyr
+#' Update UI module for comparison of crown data
+#'
+#' @description
+#' This Shiny module creates a UI to upload old comparison files, update data on Dropbox,
+#' and download the updated comparison dataset.
+#'
+#' @param id Character. Module namespace id.
+#'
+#' @return A Shiny UI tagList.
+#'
+#' @export
+#'
+#' @import sf xlsx dplyr
 
 update_ui <- function(id) {
 
@@ -60,6 +41,23 @@ update_ui <- function(id) {
 
 }
 
+
+#' Server logic for update module
+#'
+#' @description
+#' Server logic for `update_ui`. Handles reading uploaded files, updating comparison data,
+#' and providing a downloadable updated file.
+#'
+#' @param input Shiny input object
+#' @param output Shiny output object
+#' @param session Shiny session object
+#' @param site Character. Name of the site to use in output file naming
+#' @param new_shp `sf` object. New shapefile with updated crowns
+#' @param comparison `sf` object. Comparison data for crowns
+#'
+#' @return None. Provides reactive download via Shiny.
+#'
+#' @export
 update_server <-
 
    function(input, output, session, site, new_shp, comparison) {
